@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DutchTreat.Data;
 using DutchTreat.Data.Entities;
 using DutchTreat.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using StackExchange.Redis;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DutchTreat
 {
@@ -36,19 +32,20 @@ namespace DutchTreat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<StoreUser, IdentityRole>(cfg => { cfg.User.RequireUniqueEmail = true; })
-                .AddEntityFrameworkStores<DutchContext>();
+                .AddEntityFrameworkStores<DutchContext>().AddDefaultTokenProviders();
 
-            services.AddAuthentication()
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddCookie()
                 .AddJwtBearer(cfg =>
-            {
-                cfg.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidIssuer = _config["Tokens:Issuer"],
-                    ValidAudience = _config["Tokens:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
-            };
-            });
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+
+                        ValidIssuer = _config["Tokens:Issuer"],
+                        ValidAudience = _config["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
+                    };
+                });
 
             services.AddDbContext<DutchContext>(cfg =>
                 {
@@ -67,6 +64,8 @@ namespace DutchTreat
                     }
                 })
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

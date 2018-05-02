@@ -12,7 +12,7 @@
 
   "Tokens": {
     "Key": "Rutos£as989$%^ckils 32!as@bla",
-    "Issuer": "localhost",
+    "Issuer": "http://localhost:5000",
     "Audience":  "users" 
   } 
 }
