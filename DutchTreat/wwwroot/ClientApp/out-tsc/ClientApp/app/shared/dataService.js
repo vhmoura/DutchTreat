@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = require("@angular/common/http");
 var core_1 = require("@angular/core");
 require("rxjs/add/operator/map");
-var OrderNs = require("./order");
+var order_1 = require("./order");
+var order_2 = require("./order");
 var DataService = /** @class */ (function () {
     function DataService(http) {
         this.http = http;
-        this.order = new OrderNs.Order();
+        this.token = "";
+        this.order = new order_1.Order();
         this.products = [];
     }
     DataService.prototype.loadProducts = function () {
@@ -26,17 +28,50 @@ var DataService = /** @class */ (function () {
             return true;
         });
     };
+    Object.defineProperty(DataService.prototype, "LoginRequired", {
+        get: function () {
+            return this.token.length === 0 || this.tokenExpiration > new Date();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DataService.prototype.login = function (creds) {
+        var _this = this;
+        return this.http.post("/account/createtoken", creds).map(function (data) {
+            _this.token = data.token;
+            _this.tokenExpiration = data.expiration;
+            return true;
+        });
+    };
+    DataService.prototype.checkout = function () {
+        var _this = this;
+        if (!this.order.orderNumber) {
+            this.order.orderNumber = this.order.orderDate.getFullYear().toString() + this.order.orderDate.getTime().toString();
+        }
+        return this.http.post("api/orders", this.order, {
+            headers: new http_1.HttpHeaders().set("Authorization", "Bearer " + this.token)
+        }).map(function (response) {
+            _this.order = new order_1.Order();
+            return true;
+        });
+    };
     DataService.prototype.addOrder = function (newProduct) {
-        var item = new OrderNs.OrderItem();
-        item.productId = newProduct.id;
-        item.productArtist = newProduct.artist;
-        item.productArtId = newProduct.artId;
-        item.productCategory = newProduct.category;
-        item.productSize = newProduct.size;
-        item.productTitle = newProduct.title;
-        item.unitPrice = newProduct.price;
-        item.quantity = 1;
-        this.order.items.push(item);
+        var item = this.order.items.find(function (i) { return i.productId == newProduct.id; });
+        if (item) {
+            item.quantity++;
+        }
+        else {
+            item = new order_2.OrderItem();
+            item.productId = newProduct.id;
+            item.productArtist = newProduct.artist;
+            item.productArtId = newProduct.artId;
+            item.productCategory = newProduct.category;
+            item.productSize = newProduct.size;
+            item.productTitle = newProduct.title;
+            item.unitPrice = newProduct.price;
+            item.quantity = 1;
+            this.order.items.push(item);
+        }
     };
     DataService = __decorate([
         core_1.Injectable(),

@@ -63,7 +63,7 @@ namespace DutchTreat.Controller
                 }
 
                 newModel.User = await _userManager.FindByNameAsync(User.Identity.Name);
-                _dutchRepository.AddEntity(newModel);
+                _dutchRepository.AddOrder(newModel);
                 if (_dutchRepository.SaveAll())
                 {
                     var vm = _mapper.Map<Order, OrderViewModel>(newModel);

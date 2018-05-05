@@ -65,5 +65,15 @@ namespace DutchTreat.Data
         {
             return _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).Where(a=>a.User.UserName == userName).ToList();
         }
+
+        public void AddOrder(Order newModel)
+        {
+            foreach (var item in newModel.Items)
+            {
+                item.Product = _ctx.Products.Find(item.Product.Id);
+            }
+
+            AddEntity(newModel);
+        }
     }
 }

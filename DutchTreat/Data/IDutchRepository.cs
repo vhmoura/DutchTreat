@@ -13,5 +13,6 @@ namespace DutchTreat.Data
         Order GetOrderById(string userName, int id);
         void AddEntity(object model);
         IEnumerable<Order> GetAllOrdersByUser(string userName, bool includeItems);
+        void AddOrder(Order newModel);
     }
 }
