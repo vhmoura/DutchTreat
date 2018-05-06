@@ -52,16 +52,21 @@ namespace DutchTreat
                     cfg.UseSqlServer(_config.GetConnectionString("DutchConnectionString"));
                 });
 
+            services.Configure<IISOptions>(options =>
+            {
+                options.ForwardClientCertificate = false;
+            });
+
             services.AddAutoMapper();
             services.AddTransient<IMailService, NullMailService>();
             services.AddTransient<DutchSeeder>();
             services.AddScoped<IDutchRepository, DutchRepository>();
             services.AddMvc(opt =>
                 {
-                    if (_env.IsProduction())
-                    {
-                        opt.Filters.Add(new RequireHttpsAttribute());
-                    }
+                    //if (_env.IsProduction() && _config["DisableSSL"] != "true")
+                    //{
+                    //    opt.Filters.Add(new RequireHttpsAttribute());
+                    //}
                 })
                 .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 

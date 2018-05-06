@@ -9,7 +9,7 @@
       "Microsoft": "Warning"
     }
   },
-
+  "DisableSSL":  false, 
   "Tokens": {
     "Key": "Rutos£as989$%^ckils 32!as@bla",
     "Issuer": "http://localhost:5000",
