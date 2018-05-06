@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using DutchTreat.Data.Entities;
 
 namespace DutchTreat.ViewModels
 {
@@ -14,16 +15,19 @@ namespace DutchTreat.ViewModels
         [Required]
         public decimal UnitPrice { get; set; }
 
+        public Order Order { get; set; } // ?
+
         [Required]
         public int ProductId { get; set; }
-
+        public Product Product { get; set; }
         public string ProductCategory { get; set; }
         public string ProductSize { get; set; }
-        
+
         public string ProductTitle { get; set; }
-       
+
         public string ProductArtist { get; set; }
-        
+
         public string ProductArtId { get; set; }
+
     }
 }

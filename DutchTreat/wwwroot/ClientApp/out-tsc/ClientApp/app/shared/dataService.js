@@ -48,7 +48,7 @@ var DataService = /** @class */ (function () {
         if (!this.order.orderNumber) {
             this.order.orderNumber = this.order.orderDate.getFullYear().toString() + this.order.orderDate.getTime().toString();
         }
-        return this.http.post("api/orders", this.order, {
+        return this.http.post("/api/orders", this.order, {
             headers: new http_1.HttpHeaders().set("Authorization", "Bearer " + this.token)
         }).map(function (response) {
             _this.order = new order_1.Order();
@@ -56,7 +56,7 @@ var DataService = /** @class */ (function () {
         });
     };
     DataService.prototype.addOrder = function (newProduct) {
-        var item = this.order.items.find(function (i) { return i.productId == newProduct.id; });
+        var item = this.order.items.find(function (i) { return i.productId === newProduct.id; });
         if (item) {
             item.quantity++;
         }

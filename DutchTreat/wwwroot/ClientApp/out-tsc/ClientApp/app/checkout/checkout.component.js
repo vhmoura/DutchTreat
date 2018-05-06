@@ -22,7 +22,7 @@ var Checkout = /** @class */ (function () {
         var _this = this;
         this.data.checkout().subscribe(function (sucess) {
             if (sucess) {
-                _this.router.navigate([""]);
+                _this.router.navigate(["/"]);
             }
         }, function (err) { return _this.errorMessage = "failed to save order"; });
     };

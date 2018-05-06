@@ -304,7 +304,7 @@ var DataService = /** @class */ (function () {
         });
     };
     DataService.prototype.addOrder = function (newProduct) {
-        var item = this.order.items.find(function (i) { return i.productId == newProduct.id; });
+        var item = this.order.items.find(function (i) { return i.productId === newProduct.id; });
         if (item) {
             item.quantity++;
         }

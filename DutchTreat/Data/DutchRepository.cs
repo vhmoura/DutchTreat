@@ -70,7 +70,7 @@ namespace DutchTreat.Data
         {
             foreach (var item in newModel.Items)
             {
-                item.Product = _ctx.Products.Find(item.Product.Id);
+                item.Product = _ctx.Products.Find(item.ProductId);
             }
 
             AddEntity(newModel);

@@ -57,7 +57,7 @@ export class DataService {
     }
 
     public addOrder(newProduct: Product) {
-        let item: OrderItem = this.order.items.find(i => i.productId == newProduct.id);
+        let item = this.order.items.find(i => i.productId === newProduct.id);
 
         if (item) {
             item.quantity++;
